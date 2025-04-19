@@ -1,0 +1,253 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: #f0f2f5;
+  font-family: sans-serif;
+}
+
+.box {
+    background: linear-gradient(145deg, #2e3945, #222a32);
+    border: 2px solid #4d5a64;
+    padding: 15px;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 150px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+}
+
+.box-top {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    color: #ffffff;
+}
+
+.box-bottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    background: #1e242b;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #3a444e;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+
+body {
+    background-color: #3C4C62;
+    padding: 20px;
+}
+
+canvas {
+    width: 100% !important;
+    height: 200px !important;
+}
+
+/* Title styling outside of container */
+.dashboard-title {
+    color: white;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+/* Container */
+.container {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    padding: 50px;
+
+    
+}
+
+
+.left-side {
+    width: 50%; /* Try 60% or less instead of 65% */
+    height: 650px;
+    background: #27303C;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+
+.box-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.box {
+    background: #2B353C;
+    border: 3px solid #828E88;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 150px;
+    color: white;
+}
+
+.box-top {
+    font-weight: bold;
+    text-align: center;
+}
+
+.box-bottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    padding-top: 30px;
+}
+
+/* Right side */
+.right-side {
+    width: 60%;
+    height: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    color: white;
+}
+.notifications {
+    background: #2f3b4a;
+    padding: 20px;
+    border-radius: 15px;
+    flex: 1;
+    min-width: 200px;
+    max-width: 45%;
+    height: auto;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+/* Smooth scroll bar for overflow */
+.notifications::-webkit-scrollbar {
+    width: 6px;
+}
+.notifications::-webkit-scrollbar-thumb {
+    background-color: #555;
+    border-radius: 10px;
+}
+.notifications::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+/* Header */
+.notifications h2 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #555;
+    padding-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+/* Alert styles */
+.notifications p {
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    line-height: 1.5;
+    font-size: 15px;
+}
+
+/* Low stock alert */
+.low-stock {
+    background-color: #3d1c1c;
+    color: #ff6b6b;
+    border-left: 5px solid #ff4d4d;
+}
+
+/* Over stock alert */
+.over-stock {
+    background-color: #3f2d14;
+    color: #ffa500;
+    border-left: 5px solid #ffb84d;
+}
+
+/* Notifications box with a specific width */
+.notifications {
+    background: #27303C;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 0 0 35%; /* 70% width */
+    height: 250px; /* Adjusted height */
+    overflow-y: auto;
+}
+
+
+
+/* Fast-moving box with a specific width */
+.fast-moving {
+    background: #27303C;
+    padding: 15px;
+    border-radius: 10px;
+    flex: 0 0 65%; /* 30% width */
+    height: 250px; /* Adjusted height */
+    
+}
+
+
+/* Make notification and fast-moving appear side by side */
+.top-right {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+
+.notifications h2,
+.fast-moving h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.low-stock {
+    color: red;
+    margin-bottom: 10px;
+}
+
+.high-stock {
+    color: orange;
+}
+
+.chart-container {
+    background: #27303C;
+    padding: 15px;
+    border-radius: 10px;
+    height: 650px; /* Adjusted height */
+}
+
+
+.chart-container h2 {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+#fastMovingChart {
+    height: 200px !important;
+}
+
+#itemsMovedChart {
+    height: 320px !important;
+}

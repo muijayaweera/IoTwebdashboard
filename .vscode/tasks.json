@@ -1,0 +1,31 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Run Local Server",
+        "type": "shell",
+        "command": "http-server",
+        "args": [
+          ".", "-p", "8000"
+        ],
+        "isBackground": true,
+        "problemMatcher": {
+          "pattern": [
+            {
+              "regexp": ".*",
+              "file": 1,
+              "location": 2,
+              "message": 3
+            }
+          ],
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": "Starting up http-server",
+            "endsPattern": "Available on:"
+          }
+        },
+        "detail": "Starts local Node.js http-server"
+      }
+    ]
+  }
+  
