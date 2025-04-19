@@ -178,4 +178,38 @@ async function initializeCharts() {
     renderFastMovingChart(fastLabels, fastValues);
 }
 
+// 🔄 Fetch and render dynamic boxes for products (left-side grid)
+async function fetchProductBoxes() {
+    try {
+        console.log("📦 Fetching product boxes…");
+        const snapshot = await getDocs(collection(db, "products"));
+        console.log("🔍 Products returned:", snapshot.size);
+
+        const boxGrid = document.querySelector(".box-grid");
+        boxGrid.innerHTML = ""; // Clear existing boxes
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            console.log(" • product doc:", doc.id, data);
+
+            const box = document.createElement("div");
+            box.className = "box";
+            box.innerHTML = `
+                <div class="box-top">${data.name || "Unnamed"}</div>
+                <div class="box-bottom">
+                    <span>Stock: ${data.stock ?? "?"}</span>
+                    <span>Sold: ${data.sold ?? "?"}</span>
+                </div>
+            `;
+            boxGrid.appendChild(box);
+        });
+    } catch (e) {
+        console.error("❌ Firestore fetch failed for product boxes:", e);
+    }
+}
+
+// 🟢 Load product boxes when page loads
+fetchProductBoxes();
+
+
 initializeCharts();
