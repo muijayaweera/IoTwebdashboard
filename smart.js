@@ -113,6 +113,14 @@ async function fetchFastMovingData() {
     }
 }
 
+// Add the function to handle the button click event
+function goToLiveStock() {
+    window.location.href = "livestock.html"; // Redirect to the Live Stock page
+}
+
+// Your existing smart.js code...
+
+
 // Render bar chart for 'Items Moved'
 function renderItemsMovedChart(labels, values) {
     const ctx = document.getElementById("itemsMovedChart").getContext("2d");

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Live Stock</title>
+    <link rel="stylesheet" href="smart.css">
+</head>
+<body>
+    <h1 class="dashboard-title">📦 Live Stock Tracking</h1>
+    <div class="container">
+        <div class="left-side">
+            <button onclick="window.location.href='smart.html'">← Back to Dashboard</button>
+        </div>
+        <div class="right-side" id="live-stock-data">
+            <!-- ESP32 data from Firestore will be loaded here -->
+        </div>
+    </div>
+
+    <script type="module" src="livestock.js"></script>
+</body>
+</html>

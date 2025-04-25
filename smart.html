@@ -10,6 +10,9 @@
     <!-- Dashboard Title -->
     <h1 class="dashboard-title">SHELF INSIGHT DASHBOARD</h1>
 
+    <!-- Button to go to Live Stock Page -->
+    <button id="liveStockBtn">Live Stock</button>
+
     <div class="container">
         <!-- LEFT SIDE: Product Grid -->
         <div class="left-side">
@@ -39,5 +42,17 @@
     </div>
 
     <script type="module" src="smart.js"></script>
+
+    <script>
+        // Define the function in the HTML file
+        function goToLiveStock() {
+            window.location.href = "livestock.html"; // Redirect to the Live Stock page
+        }
+
+        // Add event listener to the button after script is loaded
+        document.getElementById("liveStockBtn").addEventListener("click", function() {
+            goToLiveStock(); // Call the goToLiveStock function defined here
+        });
+    </script>
 </body>
 </html>
