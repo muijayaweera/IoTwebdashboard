@@ -1,25 +1,13 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+import { db } from "./firebase.js";
+
 
 // 🚫 CORS Protection Notice (only on local file://)
 if (location.protocol === "file:") {
     alert("⚠️ Cannot run charts from file:// due to CORS. Please use a local server like:\n\npython3 -m http.server 8000\n\nThen open:\nhttp://localhost:8000/smart.html");
     throw new Error("CORS policy blocks Firebase requests over file://. Use http://localhost.");
 }
-
-const firebaseConfig = {
-    apiKey: "AIzaSyA2XjNtmmqJRspCWHo86i-2xyjd4KafjPw",
-    authDomain: "iotdash-101f7.firebaseapp.com",
-    projectId: "iotdash-101f7",
-    storageBucket: "iotdash-101f7.firebasestorage.app",
-    messagingSenderId: "950951407999",
-    appId: "1:950951407999:web:620f8426db9c733a14aa4a",
-    measurementId: "G-3Q22VZRTLE"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 
 async function fetchNotifications() {
     try {
@@ -217,6 +205,7 @@ async function fetchProductBoxes() {
         console.error("❌ Firestore fetch failed for product boxes:", e);
     }
 }
+
 
 // 🟢 Load product boxes when page loads
 fetchProductBoxes();
