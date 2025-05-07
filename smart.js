@@ -202,13 +202,15 @@ async function fetchProductBoxes() {
 
             const box = document.createElement("div");
             box.className = "box";
+
+            // Adjusted to match the structure of the data you're uploading (tag, product, weight, timestamp)
             box.innerHTML = `
-                <div class="box-top">${data.name || "Unnamed"}</div>
+                <div class="box-top">${data.product || "Unnamed"}</div>
                 <div class="box-bottom">
-                    <span>Stock: ${data.stock ?? "?"}</span>
-                    <span>Sold: ${data.sold ?? "?"}</span>
+                    <span>Weight: ${data.weight ?? "?"} grams</span>
                 </div>
             `;
+
             boxGrid.appendChild(box);
         });
     } catch (e) {
