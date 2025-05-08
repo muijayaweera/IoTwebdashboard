@@ -28,23 +28,26 @@ async function fetchLiveStock() {
         }
 
         snapshot.forEach(doc => {
-            const d = doc.data().fields;
+            const data = doc.data(); 
+            console.log(" • product doc:", doc.id, data);
+
             const div = document.createElement("div");
             div.className = "box";
             div.innerHTML = `
-                <div class="box-top">Product: ${d.product.stringValue}</div>
+                <div class="box-top">Product: ${data.product || "Unnamed"}</div>
                 <div class="box-bottom">
-                    <span>RFID: ${d.tag.stringValue}</span><br>
-                    <span>Weight: ${d.weight.integerValue}</span><br>
-                    <span>Time: ${d.timestamp.stringValue}</span>
+                    <span>RFID: ${data.tag || "Unknown"}</span><br>
+                    <span>Weight: ${data.weight ?? "?"} grams</span><br>
+                    <span>Time: ${data.timestamp || "N/A"}</span>
                 </div>
             `;
             container.appendChild(div);
         });
     } catch (error) {
-        console.error("Error fetching live stock data:", error);
+        console.error("❌ Error fetching live stock data:", error);
         container.innerHTML = "<p>Failed to load live stock data.</p>";
     }
 }
 
 fetchLiveStock();
+

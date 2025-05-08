@@ -62,14 +62,14 @@ canvas {
     height: 200px !important;
 }
 
-/* Title styling outside of container */
+
 .dashboard-title {
     color: white;
     font-size: 24px;
     margin-bottom: 20px;
 }
 
-/* Container */
+
 .container {
     display: flex;
     gap: 20px;
@@ -81,7 +81,7 @@ canvas {
 
 
 .left-side {
-    width: 50%; /* Try 60% or less instead of 65% */
+    width: 50%; 
     height: 650px;
     background: #27303C;
     padding: 20px;
@@ -119,7 +119,7 @@ canvas {
     padding-top: 30px;
 }
 
-/* Right side */
+
 .right-side {
     width: 60%;
     height: 320px;
@@ -141,7 +141,7 @@ canvas {
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
-/* Smooth scroll bar for overflow */
+
 .notifications::-webkit-scrollbar {
     width: 6px;
 }
@@ -153,7 +153,7 @@ canvas {
     background-color: transparent;
 }
 
-/* Header */
+
 .notifications h2 {
     font-size: 18px;
     margin-bottom: 15px;
@@ -162,7 +162,7 @@ canvas {
     letter-spacing: 1px;
 }
 
-/* Alert styles */
+
 .notifications p {
     margin-bottom: 12px;
     padding: 12px;
@@ -171,44 +171,44 @@ canvas {
     font-size: 15px;
 }
 
-/* Low stock alert */
+
 .low-stock {
     background-color: #3d1c1c;
     color: #ff6b6b;
     border-left: 5px solid #ff4d4d;
 }
 
-/* Over stock alert */
+
 .over-stock {
     background-color: #3f2d14;
     color: #ffa500;
     border-left: 5px solid #ffb84d;
 }
 
-/* Notifications box with a specific width */
+
 .notifications {
     background: #27303C;
     padding: 15px;
     border-radius: 10px;
-    flex: 0 0 35%; /* 70% width */
-    height: 250px; /* Adjusted height */
+    flex: 0 0 35%; 
+    height: 250px; 
     overflow-y: auto;
 }
 
 
 
-/* Fast-moving box with a specific width */
+
 .fast-moving {
     background: #27303C;
     padding: 15px;
     border-radius: 10px;
-    flex: 0 0 65%; /* 30% width */
-    height: 250px; /* Adjusted height */
+    flex: 0 0 65%; 
+    height: 250px; 
     
 }
 
 
-/* Make notification and fast-moving appear side by side */
+
 .top-right {
     display: flex;
     flex-direction: row;
@@ -235,7 +235,7 @@ canvas {
     background: #27303C;
     padding: 15px;
     border-radius: 10px;
-    height: 650px; /* Adjusted height */
+    height: 650px; 
 }
 
 
