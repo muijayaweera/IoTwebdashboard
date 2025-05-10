@@ -1,289 +1,208 @@
-* {
-    box-sizing: border-box;
+/* Base style for the entire body */
+body {
+    font-family: Arial, sans-serif;
+    background-color:whitesmoke;
+    color: white;
     margin: 0;
     padding: 0;
-    font-family: Arial, sans-serif;
 }
 
-html, body {
-  width: 100%;
-  height: 100%;
-  background: #f0f2f5;
-  font-family: sans-serif;
+/* Title styling */
+.dashboard-title {
+    text-align: center;
+    padding: 5px;
+    background-color: #1f1f1f;
+    font-size: 1rem;
+
+    /* Placement control */
+    position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
+    top: -4px;           /* Distance from top */
+    left: 7px;          /* Distance from left */
+
+    /* Size control */
+    width: 300px;       
+    height: 20px;     
+    border: 1px dashed #555;
+    border-radius: 8px;
+
+    display: flex;            /* Flexbox enables centering */
+    align-items: center;      /* Centers text vertically */
+    justify-content: center;
 }
 
-.box {
-    background: linear-gradient(145deg, #2e3945, #222a32);
-    border: 2px solid #4d5a64;
-    padding: 15px;
-    border-radius: 15px;
+
+/* Live stock button styling */
+#liveStockBtn {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    background-color:#2c3e50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
+    top: -40px;           /* Distance from top */
+    left: 500px; 
+    width: 50px;       
+    height: 14px;
+    text-align: center;
+    font-size: 0.5rem;
+    display: flex;            /* Flexbox enables centering */
+    align-items: center;      /* Centers text vertically */
+    justify-content: center;
+}
+
+/* Zooming wrapper (can adjust this scale or remove if not needed) */
+.zoom-wrapper {
+    transform: scale(0.7);
+    transform-origin: top center;
+}
+
+/* Flexible main container */
+.container {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    height: 150px;
-    color: white;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.box:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-}
-
-.box:hover::after {
-    opacity: 1;
-}
-
-.box::after {
-    content: attr(data-tooltip);
-    position: absolute;
-    bottom: 110%;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #333;
-    color: #fff;
-    padding: 6px 10px;
-    border-radius: 6px;
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    font-size: 0.8rem;
-    z-index: 1000;
-}
-
-.box-top {
-    font-weight: bold;
-    font-size: 18px;
-    text-align: center;
-    letter-spacing: 1px;
-    margin-bottom: 10px;
-    color: #ffffff;
-}
-
-.box-bottom {
-    display: flex;
-    justify-content: space-between;
-    font-size: 16px;
-    background: #1e242b;
-    padding: 10px;
-    border-radius: 10px;
-    border: 1px solid #3a444e;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-}
-
-
-body {
-    background-color: #3C4C62;
+    gap: 15px;
     padding: 20px;
 }
 
-canvas {
-    width: 100% !important;
-    height: 200px !important;
+/* Add ability to resize & drag */
+.resizable-movable {
+    position: relative; /* Needed for drag */
+    resize: both;       /* Enables resizing */
+    overflow: auto;     /* Keeps content visible during resize */
+    cursor: move;       /* Cursor icon to indicate draggable */
 }
 
+/* Notification bar section */
+.notifications-bar {
+    background-color: #2c2c2c;
+    padding: 10px;
+    border-radius: 8px;
+    position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
+    top: -50px;           /* Distance from top */
+    left: -182px; 
+    width: 630px;
+    height: 150px;
+}
 
-.dashboard-title {
-    color: white;
-    font-size: 24px;
+.left-side {
+    position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
+    top: 108px;           /* Distance from top */
+    left: 490px; 
+
+    /* Size control */
+    width: 300px;       
+    height: 20px;     
+}
+
+/* Notification title */
+.notifications-bar h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+/* Container for notification items */
+#notifications-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Individual notification style */
+.notification-item {
+    background-color: #34495e;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+}
+
+/* Section at the top right */
+.top-right {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
     margin-bottom: 20px;
 }
 
 
-.container {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    padding: 50px;
-
+/* Common box section */
+.fast-moving{
+    flex: 1;
+    background-color: #2c2c2c;
+    padding: 10px;
+    border-radius: 8px;
+        /* Placement control */
+        position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
+        top: -235.5px;           /* Distance from top */
+        left: 170px;          /* Distance from left */
+    
+        /* Size control */
+        width: -150px;       
+        height: 300px;     
+        border: 1px dashed #555;
+        border-radius: 8px;
+    
+        display: flex;            /* Flexbox enables centering */ 
+        justify-content: center;
     
 }
 
-
-.left-side {
-    width: 50%; 
-    height: 650px;
-    background: #27303C;
-    padding: 20px;
-    border-radius: 10px;
-}
-
-
+/* Grid of boxes */
 .box-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 15px;
 }
 
+/* Box item */
 .box {
-    background: #2B353C;
-    border: 3px solid #828E88;
+    background-color: #2c3e50;
     padding: 10px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 150px;
-    color: white;
-}
-
-.box-top {
-    font-weight: bold;
+    border-radius: 8px;
     text-align: center;
 }
 
-.box-bottom {
-    display: flex;
-    justify-content: space-between;
-    font-size: 20px;
-    padding-top: 30px;
+/* Top text of each box */
+.box-top {
+    font-weight: bold;
+    margin-bottom: 5px;
 }
 
+/* Chart container section */
+.chart-container {
+    background-color: #2c2c2c;
+    padding: 10px;
+    border-radius: 8px;
 
-.right-side {
-    width: 60%;
-    height: 320px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    color: white;
-}
-.notifications {
-    background: #2f3b4a;
-    padding: 20px;
-    border-radius: 15px;
-    flex: 1;
-    min-width: 200px;
-    max-width: 45%;
-    height: auto;
-    max-height: 250px;
-    overflow-y: auto;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-
-.notifications::-webkit-scrollbar {
-    width: 6px;
-}
-.notifications::-webkit-scrollbar-thumb {
-    background-color: #555;
-    border-radius: 10px;
-}
-.notifications::-webkit-scrollbar-track {
-    background-color: transparent;
-}
-
-
-.notifications h2 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    border-bottom: 1px solid #555;
-    padding-bottom: 5px;
-    letter-spacing: 1px;
-}
-
-
-.notifications p {
-    margin-bottom: 12px;
-    padding: 12px;
-    border-radius: 10px;
-    line-height: 1.5;
-    font-size: 15px;
-}
-
-
-.low-stock {
-    background-color: #3d1c1c;
-    color: #ff6b6b;
-    border-left: 5px solid #ff4d4d;
-}
-
-
-.over-stock {
-    background-color: #3f2d14;
-    color: #ffa500;
-    border-left: 5px solid #ffb84d;
-}
-
-
-.notifications {
-    background: #27303C;
-    padding: 15px;
-    border-radius: 10px;
-    flex: 0 0 35%; 
-    height: 250px; 
-    overflow-y: auto;
-}
-
-
-
-
-.fast-moving {
-    background: #27303C;
-    padding: 15px;
-    border-radius: 10px;
-    flex: 0 0 65%; 
-    height: 250px; 
+    position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
+        top: -380px;           /* Distance from top */
+        left: -182px;          /* Distance from left */
     
+        /* Size control */
+        width: 630px;       
+        height: 400px;     
+        border: 1px dashed #555;
+        border-radius: 8px;
 }
 
+/* Headings for sections */
+h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
 
-
-.top-right {
+/* Main content layout */
+.main-content {
     display: flex;
     flex-direction: row;
-    gap: 10px;
+    gap: 20px;
 }
 
-
-.notifications h2,
-.fast-moving h2 {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-.low-stock {
-    color: red;
-    margin-bottom: 10px;
-}
-
-.high-stock {
-    color: orange;
-}
-
-.chart-container {
-    background: #27303C;
-    padding: 15px;
-    border-radius: 10px;
-    height: 650px; 
-}
-
-
-.chart-container h2 {
-    font-size: 16px;
-    margin-bottom: 10px;
-}
-
-#fastMovingChart {
-    height: 200px !important;
-}
-
-#itemsMovedChart {
-    height: 320px !important;
-
-}
-#liveStockBtn {
-    padding: 10px 20px;
-    background-color: #3498db;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-#liveStockBtn:hover {
-    background-color: #2980b9;
+/* Optional: Add border to indicate draggable/resizable zones */
+.resizable-movable {
+    border: 1px dashed #555;
 }
