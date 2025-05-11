@@ -181,7 +181,7 @@ async function fetchProductBoxes() {
         const snapshot = await getDocs(collection(db, "products"));
         console.log("🔍 Products returned:", snapshot.size);
 
-        const boxGrid = document.querySelector(".box-grid");
+        const boxGrid = document.querySelector("#product-list");
         boxGrid.innerHTML = ""; // Clear existing boxes
 
         snapshot.forEach(doc => {
