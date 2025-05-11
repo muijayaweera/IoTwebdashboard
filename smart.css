@@ -89,8 +89,8 @@ body {
 
 .left-side {
     position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
-    top: 108px;           /* Distance from top */
-    left: 490px; 
+    top: 102px;           /* Distance from top */
+    left: 515px; 
 
     /* Size control */
     width: 300px;       
@@ -129,36 +129,37 @@ body {
 }
 
 
-/* Common box section */
+
 .fast-moving{
     flex: 1;
     background-color: #2c2c2c;
-    padding: 10px;
+    padding: 5px;
     border-radius: 8px;
-        /* Placement control */
-        position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
-        top: -235.5px;           /* Distance from top */
-        left: 170px;          /* Distance from left */
+        
+        position:relative; 
+        top: -270.5px;        
+        left: 515px;          
     
         /* Size control */
-        width: -150px;       
+        width: 700px;       
         height: 300px;     
         border: 1px dashed #555;
         border-radius: 8px;
     
-        display: flex;            /* Flexbox enables centering */ 
-        justify-content: center;
+        display: flex; 
+        flex-direction: row; 
+        gap: 20px;
     
 }
 
-/* Grid of boxes */
+
 .box-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
     gap: 15px;
 }
 
-/* Box item */
+
 .box {
     background-color: #2c3e50;
     padding: 10px;
@@ -195,14 +196,15 @@ h2 {
     margin-bottom: 10px;
 }
 
-/* Main content layout */
-.main-content {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-}
 
 /* Optional: Add border to indicate draggable/resizable zones */
 .resizable-movable {
     border: 1px dashed #555;
+}
+
+
+.left-side h2 {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: black;
 }
