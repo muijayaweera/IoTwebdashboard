@@ -6,6 +6,10 @@ import {
     getDocs,
     onSnapshot,
     query,
+    getDoc,
+    doc,
+    updateDoc,
+    setDoc,
     orderBy,
     limit
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -61,24 +65,46 @@ function renderNotifications(notifications) {
 // Fetch data for 'Items Moved' chart
 async function fetchItemsMovedData() {
     try {
-        console.log("📡 Fetching itemsMoved data…");
-        onSnapshot(collection(db, "charts", "itemsMoved", "data"), (snapshot) => {
-            const labels = [];
-            const values = [];
-            snapshot.forEach(doc => {
-                const d = doc.data();
-                labels.push(d.date);
-                values.push(d.value);
-            });
-            renderItemsMovedChart(labels, values);
-        });
+        console.log("📡 Fetching ordered itemsMoved data…");
 
-        return { labels: [], values: [] }; // placeholder return (not needed because snapshot handles updates)
+        const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const validDays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+        const labels = [];
+        const values = [];
+
+        // Get today's day as a string
+        const today = new Date();
+        const todayWeekday = weekdays[today.getDay()]; // e.g., "Tuesday"
+
+        for (const day of validDays) {
+            const docRef = doc(db, "itemsmoved", day);
+            const docSnap = await getDoc(docRef);
+
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+
+                // ✅ Update "date" field only if it's today
+                if (day === todayWeekday) {
+                    await updateDoc(docRef, {
+                        date: todayWeekday,
+                    });
+                }
+
+                labels.push(data.date ?? day); // fallback to doc ID if date is missing
+                values.push(typeof data.value === "number" ? data.value : parseInt(data.value || "0", 10));
+            } else {
+                labels.push(day);
+                values.push(0);
+            }
+        }
+
+        renderItemsMovedChart(labels, values);
     } catch (e) {
         console.error("❌ Firestore fetch failed for itemsMoved:", e);
-        return { labels: [], values: [] };
     }
 }
+
+
 
 // Fetch data for 'Fast Moving Items' doughnut chart
 async function fetchFastMovingData() {
@@ -221,6 +247,45 @@ async function fetchProductBoxes() {
     }
 }
 
+async function incrementItemsMovedToday() {
+    const today = new Date();
+    const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const day = weekdays[today.getDay()];
+
+    if (!["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"].includes(day)) {
+        console.log(`ℹ️ Skipping update: today is ${day}`);
+        return;
+    }
+
+    const docRef = doc(db, "itemsmoved", day);
+    const docSnap = await getDoc(docRef);
+
+    const formattedDate = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`; // MM/DD/YYYY
+
+    if (docSnap.exists()) {
+        const data = docSnap.data();
+        const currentValue = typeof data.value === "number" ? data.value : parseInt(data.value || "0", 10);
+        const newValue = currentValue + 1;
+
+        await updateDoc(docRef, {
+            value: newValue,
+            date: formattedDate
+        });
+
+        console.log(`✅ Incremented '${day}' to ${newValue} on ${formattedDate}`);
+    } else {
+        await setDoc(docRef, {
+            value: 1,
+            date: formattedDate
+        });
+
+        console.log(`🆕 Created '${day}' document with value 1 and date ${formattedDate}`);
+    }
+
+    fetchItemsMovedData(); // Refresh chart
+}
+
+
 // 👁️ Real-time listener for latest RFID product entry
 function startRFIDProductListener() {
     const rfidDisplay = document.getElementById("rfid-product-display");
@@ -273,12 +338,12 @@ function startRFIDProductListener() {
             `;
             rfidDisplay.appendChild(productBox);
 
+            incrementItemsMovedToday();
+
             // 🔄 Update charts when a new RFID scan is detected
             fetchItemsMovedData();
             fetchFastMovingData();
-
-
-            lastTimestamp = timestamp;
+            
 
             // Clear existing interval if any
             if (checkInterval) clearInterval(checkInterval);
