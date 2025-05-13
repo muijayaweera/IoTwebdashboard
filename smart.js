@@ -10,78 +10,70 @@ import {
     limit
 } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-
-
 // 🚫 CORS Protection Notice (only on local file://)
 if (location.protocol === "file:") {
     alert("⚠️ Cannot run charts from file:// due to CORS. Please use a local server like:\n\npython3 -m http.server 8000\n\nThen open:\nhttp://localhost:8000/smart.html");
     throw new Error("CORS policy blocks Firebase requests over file://. Use http://localhost.");
-}
+    }
+
+let itemsMovedChartInstance = null;
+let fastMovingChartInstance = null;
+
 
 async function fetchNotifications() {
     try {
         console.log("📡 Fetching notifications…");
-        const snapshot = await getDocs(collection(db, "notifications"));
-        console.log("🔍 Documents returned for notifications:", snapshot.size);
+        onSnapshot(collection(db, "notifications"), (snapshot) => {
+            const notifications = [];
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                console.log(" • notification doc:", doc.id, data);
+                notifications.push(data);
+            });
 
-        const notifications = [];
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            console.log(" • notification doc:", doc.id, data);
-            notifications.push(data);
+            renderNotifications(notifications); // Pass notifications directly
         });
 
-        return notifications;
     } catch (e) {
         console.error("❌ Firestore fetch failed for notifications:", e);
-        return [];
     }
 }
 
-async function renderNotifications() {
-    const notifications = await fetchNotifications();
+function renderNotifications(notifications) {
     const notificationsContainer = document.getElementById("notifications-container");
+    notificationsContainer.innerHTML = ""; // Clear old content
 
-    // Check if the notifications array is empty
     if (notifications.length === 0) {
         notificationsContainer.innerHTML = "<p>No notifications available.</p>";
         return;
     }
 
-    // Loop through the notifications and render them
     notifications.forEach(notification => {
         const notificationElement = document.createElement("p");
-
-        // Assign a class based on the notification type
         if (notification.type) {
-            notificationElement.classList.add(notification.type.toLowerCase().replace(" ", "-")); // For styling based on type
+            notificationElement.classList.add(notification.type.toLowerCase().replace(" ", "-"));
         }
-
-        // Render notification content
         notificationElement.innerHTML = `🔴 ${notification.type || "No Type"} <br> Product: ${notification.product || "Unknown Product"} <br> Stock Level: ${notification.stockLevel || "Unknown"}`;
         notificationsContainer.appendChild(notificationElement);
     });
 }
 
-renderNotifications();
-
-
 // Fetch data for 'Items Moved' chart
 async function fetchItemsMovedData() {
     try {
         console.log("📡 Fetching itemsMoved data…");
-        const snapshot = await getDocs(collection(db, "charts", "itemsMoved", "data"));
-        console.log("🔍 Documents returned for itemsMoved:", snapshot.size);
-
-        const labels = [];
-        const values = [];
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            console.log(" • itemsMoved doc:", doc.id, d);
-            labels.push(d.date);
-            values.push(d.value);
+        onSnapshot(collection(db, "charts", "itemsMoved", "data"), (snapshot) => {
+            const labels = [];
+            const values = [];
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                labels.push(d.date);
+                values.push(d.value);
+            });
+            renderItemsMovedChart(labels, values);
         });
-        return { labels, values };
+
+        return { labels: [], values: [] }; // placeholder return (not needed because snapshot handles updates)
     } catch (e) {
         console.error("❌ Firestore fetch failed for itemsMoved:", e);
         return { labels: [], values: [] };
@@ -92,18 +84,18 @@ async function fetchItemsMovedData() {
 async function fetchFastMovingData() {
     try {
         console.log("📡 Fetching fastMoving data…");
-        const snapshot = await getDocs(collection(db, "charts", "fastMoving", "data"));
-        console.log("🔍 Documents returned for fastMoving:", snapshot.size);
-
-        const labels = [];
-        const values = [];
-        snapshot.forEach(doc => {
-            const d = doc.data();
-            console.log(" • fastMoving doc:", doc.id, d);
-            labels.push(d.label);
-            values.push(d.value);
+        onSnapshot(collection(db, "charts", "fastMoving", "data"), (snapshot) => {
+            const labels = [];
+            const values = [];
+            snapshot.forEach(doc => {
+                const d = doc.data();
+                labels.push(d.label);
+                values.push(d.value);
+            });
+            renderFastMovingChart(labels, values);
         });
-        return { labels, values };
+
+        return { labels: [], values: [] }; // placeholder return
     } catch (e) {
         console.error("❌ Firestore fetch failed for fastMoving:", e);
         return { labels: [], values: [] };
@@ -115,13 +107,18 @@ function goToLiveStock() {
     window.location.href = "livestock.html"; // Redirect to the Live Stock page
 }
 
-// Your existing smart.js code...
-
-
 // Render bar chart for 'Items Moved'
 function renderItemsMovedChart(labels, values) {
     const ctx = document.getElementById("itemsMovedChart").getContext("2d");
-    new Chart(ctx, {
+
+    if (itemsMovedChartInstance) {
+        itemsMovedChartInstance.data.labels = labels;
+        itemsMovedChartInstance.data.datasets[0].data = values;
+        itemsMovedChartInstance.update();
+        return;
+    }
+
+    itemsMovedChartInstance = new Chart(ctx, {
         type: "bar",
         data: {
             labels,
@@ -148,8 +145,16 @@ function renderItemsMovedChart(labels, values) {
 
 // Render doughnut chart for 'Fast Moving Items'
 function renderFastMovingChart(labels, values) {
-    const fastMovingCtx = document.getElementById("fastMovingChart").getContext("2d");
-    new Chart(fastMovingCtx, {
+    const ctx = document.getElementById("fastMovingChart").getContext("2d");
+
+    if (fastMovingChartInstance) {
+        fastMovingChartInstance.data.labels = labels;
+        fastMovingChartInstance.data.datasets[0].data = values;
+        fastMovingChartInstance.update();
+        return;
+    }
+
+    fastMovingChartInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
             labels: labels,
@@ -174,14 +179,15 @@ function renderFastMovingChart(labels, values) {
     });
 }
 
+
 // Initialize both charts
 async function initializeCharts() {
-    const { labels: movedLabels, values: movedValues } = await fetchItemsMovedData();
-    renderItemsMovedChart(movedLabels, movedValues);
-
-    const { labels: fastLabels, values: fastValues } = await fetchFastMovingData();
-    renderFastMovingChart(fastLabels, fastValues);
+    await fetchItemsMovedData();
+    await fetchFastMovingData();
 }
+
+// Initialize notifications and charts on page load
+fetchNotifications();
 
 // 🔄 Fetch and render dynamic boxes for products (left-side grid)
 async function fetchProductBoxes() {
@@ -266,6 +272,11 @@ function startRFIDProductListener() {
                 <p><strong>Time:</strong> ${new Date(timestamp * 1000).toLocaleString()}</p>
             `;
             rfidDisplay.appendChild(productBox);
+
+            // 🔄 Update charts when a new RFID scan is detected
+            fetchItemsMovedData();
+            fetchFastMovingData();
+
 
             lastTimestamp = timestamp;
 
