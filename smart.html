@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Smart Shelf Dashboard</title>
     <link rel="stylesheet" href="smart.css">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script src="https://cdn.jsdelivr.net/npm/chart.js/dist/chart.umd.min.js"></script>    
 </head>
 <body>
@@ -20,13 +21,24 @@
             </div>
         </div>
 
+        <!-- RFID Product Display Section -->
+        <div class="rfid-display-section">
+             <h2>Product Display</h2>
+             <div id="rfid-product-display">
+             <!-- Live product details will appear here -->
+            </div>
+        </div>
+
         <!-- Main Content Section: Left Side Grid + Fast Moving Chart -->
          <div class="main-content">
             
          <!-- Left Side Product Grid -->
-         <div class="right-side" id="product-list">
-            <!-- Dynamic boxes will be inserted here -->
-        </div>
+         <div class="right-side">
+            <!-- Wrapping the product list inside a scrollable container -->
+            <div class="scrollable-product-list" id="product-list">
+                <!-- Dynamic boxes will be inserted here -->
+            </div>
+         </div>
          </div>
         
 
@@ -36,7 +48,6 @@
                  <canvas id="fastMovingChart"></canvas>
              </div>
          </div>
-
 
         <!-- Chart -->
         <div class="chart-container">

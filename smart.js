@@ -1,6 +1,15 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 import { db } from "./firebase.js";
+import {
+    getFirestore,
+    collection,
+    getDocs,
+    onSnapshot,
+    query,
+    orderBy,
+    limit
+} from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
 
 
 // 🚫 CORS Protection Notice (only on local file://)
@@ -205,6 +214,80 @@ async function fetchProductBoxes() {
         console.error("❌ Firestore fetch failed for product boxes:", e);
     }
 }
+
+// 👁️ Real-time listener for latest RFID product entry
+function startRFIDProductListener() {
+    const rfidDisplay = document.getElementById("rfid-product-display");
+
+    const q = query(collection(db, "display"), orderBy("timestamp", "desc"), limit(1));
+    let lastTimestamp = null;
+    let checkInterval = null;
+
+    function formatElapsedMinutes(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const hrs = Math.floor(mins / 60);
+        const remMins = mins % 60;
+
+        if (mins < 1) return "less than a minute";
+
+        if (hrs >= 1) {
+            return `${hrs} hour${hrs > 1 ? 's' : ''} ${remMins} minute${remMins !== 1 ? 's' : ''}`;
+        } else {
+            return `${mins} minute${mins !== 1 ? 's' : ''}`;
+        }
+    }
+
+    function showNoScanMessage(secondsElapsed) {
+        rfidDisplay.innerHTML = `
+            <div class="no-scan-message">
+                <p><strong>No new item scanned for ${formatElapsedMinutes(secondsElapsed)}.</strong></p>
+            </div>
+        `;
+    }
+
+    onSnapshot(q, (snapshot) => {
+        if (snapshot.empty) {
+            showNoScanMessage(0);
+            return;
+        }
+
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            const timestamp = data.timestamp?.seconds;
+
+            // Clear and display the latest product info
+            rfidDisplay.innerHTML = "";
+            const productBox = document.createElement("div");
+            productBox.className = "rfid-box";
+            productBox.innerHTML = `
+                <p><strong>Product:</strong> ${data.product || "Unknown"}</p>
+                <p><strong>Weight:</strong> ${data.weight || "?"} grams</p>
+                <p><strong>Tag:</strong> ${data.tag || "N/A"}</p>
+                <p><strong>Time:</strong> ${new Date(timestamp * 1000).toLocaleString()}</p>
+            `;
+            rfidDisplay.appendChild(productBox);
+
+            lastTimestamp = timestamp;
+
+            // Clear existing interval if any
+            if (checkInterval) clearInterval(checkInterval);
+
+            // Start a new interval that checks every 1 minute
+            checkInterval = setInterval(() => {
+                const now = Math.floor(Date.now() / 1000);
+                const secondsElapsed = now - lastTimestamp;
+                if (secondsElapsed >= 60) {
+                    showNoScanMessage(secondsElapsed);
+                }
+            }, 60000); // 🔁 Check every 1 minute
+        });
+    });
+}
+
+
+// 🔄 Start the RFID product listener on page load
+startRFIDProductListener();
+
 
 
 // 🟢 Load product boxes when page loads
