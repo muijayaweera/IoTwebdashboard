@@ -104,30 +104,6 @@ async function fetchItemsMovedData() {
     }
 }
 
-
-
-// Fetch data for 'Fast Moving Items' doughnut chart
-async function fetchFastMovingData() {
-    try {
-        console.log("📡 Fetching fastMoving data…");
-        onSnapshot(collection(db, "charts", "fastMoving", "data"), (snapshot) => {
-            const labels = [];
-            const values = [];
-            snapshot.forEach(doc => {
-                const d = doc.data();
-                labels.push(d.label);
-                values.push(d.value);
-            });
-            renderFastMovingChart(labels, values);
-        });
-
-        return { labels: [], values: [] }; // placeholder return
-    } catch (e) {
-        console.error("❌ Firestore fetch failed for fastMoving:", e);
-        return { labels: [], values: [] };
-    }
-}
-
 // Add the function to handle the button click event
 function goToLiveStock() {
     window.location.href = "livestock.html"; // Redirect to the Live Stock page
@@ -338,6 +314,7 @@ function startRFIDProductListener() {
             `;
             rfidDisplay.appendChild(productBox);
 
+            handleProductDetection(data.tag);
             incrementItemsMovedToday();
 
             // 🔄 Update charts when a new RFID scan is detected
@@ -345,6 +322,7 @@ function startRFIDProductListener() {
             fetchFastMovingData();
             
 
+            lastTimestamp = timestamp;
             // Clear existing interval if any
             if (checkInterval) clearInterval(checkInterval);
 
@@ -359,6 +337,66 @@ function startRFIDProductListener() {
         });
     });
 }
+
+async function fetchFastMovingData() {
+    try {
+        console.log("📡 Listening to fastmovingchart updates…");
+        onSnapshot(collection(db, "fastmovingchart"), (snapshot) => {
+            const labels = [];
+            const values = [];
+
+            let total = 0;
+            const dataMap = [];
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                labels.push(data.name);
+                values.push(data.count || 0);
+                dataMap.push({ label: data.name, count: data.count || 0 });
+                total += data.count || 0;
+            });
+
+            // Convert to percentage values
+            const percentageValues = dataMap.map(item =>
+                total > 0 ? Math.round((item.count / total) * 100) : 0
+            );
+
+            renderFastMovingChart(labels, percentageValues);
+        });
+    } catch (e) {
+        console.error("❌ Firestore fetch failed for fastMoving:", e);
+    }
+}
+
+
+async function handleProductDetection(tagId) {
+    const docIds = ["31df528", "3350ce24"];
+    let matchedDocId = null;
+
+    for (const docId of docIds) {
+        const docRef = doc(db, "fastmovingchart", docId);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+
+            if (tagId === docId) {
+                matchedDocId = docId;
+                const currentCount = data.count || 0;
+                await updateDoc(docRef, {
+                    count: currentCount + 1
+                });
+                console.log(`✅ Incremented count for ${data.name} (tag: ${tagId})`);
+                break;
+            }
+        }
+    }
+
+    if (!matchedDocId) {
+        console.log(`❌ No matching tag found for ${tagId}`);
+    }
+}
+
 
 
 // 🔄 Start the RFID product listener on page load
