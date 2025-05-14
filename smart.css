@@ -88,7 +88,7 @@ body {
     top: -50px;           /* Distance from top */
     left: -335px; 
     width: 630px;
-    height: 150px;
+    height: 350px;
 }
 
 .left-side {
@@ -109,10 +109,14 @@ body {
 
 /* Container for notification items */
 #notifications-container {
-    display: flex;
-    flex-direction: row;
     flex-wrap: wrap;
     gap: 10px;
+    color: #1f1f1f;
+    position: relative; /* Needed for drag */
+    top: 57px;
+    left: 70px;
+    width: 500px;
+    height: 200px;
 }
 
 /* Individual notification style */
@@ -140,7 +144,7 @@ body {
     border-radius: 8px;
         
         position:relative; 
-        top: -1091px;        
+        top: -1156px;        
         left: 965px;          
     
         /* Size control */
@@ -171,6 +175,9 @@ body {
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
     transition: transform 0.2s;
     margin-bottom: 10px; 
+    height: 157px;
+    color: white;
+    font-size: 1.5rem;
 }
 
 .box:hover {
@@ -198,12 +205,12 @@ body {
     border-radius: 8px;
 
     position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
-        top: -1070px;           /* Distance from top */
+        top: -1157px;           /* Distance from top */
         left: 985px;          /* Distance from left */
     
         /* Size control */
         width: 830px;       
-        height: 518px;     
+        height: 575px;     
         border: 1px dashed #555;
         border-radius: 8px;
 }
@@ -247,12 +254,12 @@ h2 {
     border-radius: 10px;
     color: #ecf0f1;
     position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
-        top: -20px;           /* Distance from top */
+        top: -50px;           /* Distance from top */
         left: -335px;          /* Distance from left */
     
         /* Size control */
         width: 630px;       
-        height: 755px;     
+        height: 621px;     
 }
 
 .rfid-display-section h2 {
@@ -267,18 +274,18 @@ h2 {
     border-radius: 5px;
     background-color: whitesmoke;
     width: 608px;       
-    height: 670px; 
+    height: 570px; 
 }
 
 .rfid-box p {
     margin: 5px 0;
-    font-size: 25px;
+    font-size: 32px;
     color: black;
     width: 400px;       
     height: 50px;
     position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
-        top: 200px;           /* Distance from top */
-        left: 140px;          /* Distance from left */
+        top: 130px;           /* Distance from top */
+        left: 150px;          /* Distance from left */
     
         /* Size control */
         width: 400px;       
@@ -301,20 +308,131 @@ h2 {
     padding: 10px;
     background-color: grey;
     position:relative; /* Can also use 'fixed' if you want it to stick on scroll */
-        top: -177px;           /* Distance from top */
+        top: -241px;           /* Distance from top */
         left: -135px;          /* Distance from left */
     
         /* Size control */
         width: 500px;       
-        height: 971px; 
+        height: 1004px; 
 }
 
-#product-list-{
+/* 📦 Shelf columns */
+.shelf-column {
+    flex: 1;
     padding: 10px;
-    border-bottom: 1px solid #ddd;
-    font-size: 18px;
-    color: black;
-    width: 500px;       
-        height: 971px; 
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color:#f9f9f9;
+}
 
+.shelf-column h3 {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.shelf-item {
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    font-size: 14px;
+}
+
+.blinking-red {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: red;
+    border-radius: 50%;
+    margin-left: 10px;
+    animation: blink 1s linear infinite;
+}
+
+.blinking-green {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    background-color: green;
+    border-radius: 50%;
+    margin-left: 10px;
+    animation: blink 1s linear infinite;
+}
+
+@keyframes blink {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.header-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-left: 10px;
+    border-radius: 50%;
+    background-color: transparent;
+}
+
+.shelf-item {
+    padding: 10px;
+    border: 1px solid #ddd;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.notification-indicator {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.blinking-red {
+    background-color: #ff4444;
+    animation: blink-red 1s linear infinite;
+}
+
+.blinking-green {
+    background-color: #00C851;
+    animation: blink-green 1s linear infinite;
+}
+
+@keyframes blink-red {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 5; }
+}
+
+@keyframes blink-green {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 5; }
+}
+
+.notification-item {
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 4px;
+    background-color: #f8f9fa;
+    border-left: 4px solid transparent;
+}
+
+.notification-item.low-stock {
+    border-left-color: #ff4444;
+}
+
+.notification-item.overstock {
+    border-left-color: #00C851;
+}
+
+.shelf-column {
+    flex: 1;
+    padding: 10px;
+}
+
+.shelf-content {
+    margin-top: 10px;
 }

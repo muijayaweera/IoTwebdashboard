@@ -25,42 +25,84 @@ let fastMovingChartInstance = null;
 
 
 async function fetchNotifications() {
-    try {
-        console.log("📡 Fetching notifications…");
-        onSnapshot(collection(db, "notifications"), (snapshot) => {
-            const notifications = [];
-            snapshot.forEach(doc => {
-                const data = doc.data();
-                console.log(" • notification doc:", doc.id, data);
-                notifications.push(data);
-            });
+    console.log("📡 Listening for live shelf updates…");
 
-            renderNotifications(notifications); // Pass notifications directly
-        });
+    const container = document.getElementById("notifications-container");
+    container.innerHTML = `
+        <div id="shelf-columns" style="display: flex; gap: 30px;">
+            <div class="shelf-column" id="shelf1-column">
+                <h3>Shelf 1</h3>
+                <div class="shelf-content" id="shelf1-content"></div>
+            </div>
+            <div class="shelf-column" id="shelf2-column">
+                <h3>Shelf 2</h3>
+                <div class="shelf-content" id="shelf2-content"></div>
+            </div>
+        </div>
+    `;
 
-    } catch (e) {
-        console.error("❌ Firestore fetch failed for notifications:", e);
-    }
+    // Add blinking indicators to the header
+    const shelf1Header = document.querySelector("#shelf1-column h3");
+    const shelf2Header = document.querySelector("#shelf2-column h3");
+    
+    // Create indicator elements
+    const shelf1Indicator = document.createElement("span");
+    shelf1Indicator.className = "header-indicator";
+    shelf1Header.appendChild(shelf1Indicator);
+    
+    const shelf2Indicator = document.createElement("span");
+    shelf2Indicator.className = "header-indicator";
+    shelf2Header.appendChild(shelf2Indicator);
+
+    const shelf1Ref = doc(db, "products", "shelf1");
+    const shelf2Ref = doc(db, "products", "shelf2");
+
+    // Listen to Shelf 1
+    onSnapshot(shelf1Ref, (doc) => {
+        renderShelfData(doc, "shelf1-content", shelf1Indicator);
+    });
+
+    // Listen to Shelf 2
+    onSnapshot(shelf2Ref, (doc) => {
+        renderShelfData(doc, "shelf2-content", shelf2Indicator);
+    });
 }
 
-function renderNotifications(notifications) {
-    const notificationsContainer = document.getElementById("notifications-container");
-    notificationsContainer.innerHTML = ""; // Clear old content
+function renderShelfData(doc, targetId, headerIndicator) {
+    const shelfContainer = document.getElementById(targetId);
+    shelfContainer.innerHTML = ""; // Clear previous
 
-    if (notifications.length === 0) {
-        notificationsContainer.innerHTML = "<p>No notifications available.</p>";
+    if (!doc.exists()) {
+        shelfContainer.innerHTML = "<p>No data available for this shelf</p>";
+        headerIndicator.className = "header-indicator";
         return;
     }
 
-    notifications.forEach(notification => {
-        const notificationElement = document.createElement("p");
-        if (notification.type) {
-            notificationElement.classList.add(notification.type.toLowerCase().replace(" ", "-"));
-        }
-        notificationElement.innerHTML = `🔴 ${notification.type || "No Type"} <br> Product: ${notification.product || "Unknown Product"} <br> Stock Level: ${notification.stockLevel || "Unknown"}`;
-        notificationsContainer.appendChild(notificationElement);
-    });
+    const data = doc.data();
+    const weight = data.weight || 0;
+
+    // Update header indicator
+    headerIndicator.className = "header-indicator";
+    if (weight < 200) {
+        headerIndicator.classList.add("blinking-red");
+        headerIndicator.title = "Low stock alert!";
+    } else if (weight > 1000) {
+        headerIndicator.classList.add("blinking-green");
+        headerIndicator.title = "Overstock alert!";
+    }
+
+    // Create shelf item display
+    const itemDiv = document.createElement("div");
+    itemDiv.className = "shelf-item";
+    itemDiv.innerHTML = `
+        <strong>${doc.id}</strong><br>
+        Weight: ${weight} g
+    `;
+
+    shelfContainer.appendChild(itemDiv);
 }
+
+
 
 // Fetch data for 'Items Moved' chart
 async function fetchItemsMovedData() {
@@ -212,9 +254,10 @@ function fetchProductBoxes() {
             const box = document.createElement("div");
             box.className = "box";
 
-            const formattedDate = data.last_updated?.toDate
-                ? data.last_updated.toDate().toLocaleString()
-                : "Unknown";
+            const formattedDate = data.last_updated
+            ? new Date(data.last_updated).toLocaleString()
+            : "Unknown";
+
 
             box.innerHTML = `
                 <div class="box-top font-bold text-lg mb-2">${data.product || "Unnamed Product"}</div>
