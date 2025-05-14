@@ -308,3 +308,13 @@ h2 {
         width: 500px;       
         height: 971px; 
 }
+
+#product-list-{
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 18px;
+    color: black;
+    width: 500px;       
+        height: 971px; 
+
+}

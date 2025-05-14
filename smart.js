@@ -192,14 +192,18 @@ async function initializeCharts() {
 fetchNotifications();
 
 // 🔄 Fetch and render dynamic boxes for products (left-side grid)
-async function fetchProductBoxes() {
-    try {
-        console.log("📦 Fetching product boxes…");
-        const snapshot = await getDocs(collection(db, "products"));
-        console.log("🔍 Products returned:", snapshot.size);
+// 🔄 Real-time fetch and render for products (left-side grid)
+function fetchProductBoxes() {
+    console.log("📦 Listening for real-time updates to product boxes…");
 
-        const boxGrid = document.querySelector("#product-list");
-        boxGrid.innerHTML = ""; // Clear existing boxes
+    const boxGrid = document.querySelector("#product-list");
+    boxGrid.innerHTML = ""; // Clear existing boxes initially
+
+    const productsRef = collection(db, "products");
+
+    onSnapshot(productsRef, snapshot => {
+        console.log("🔁 Product snapshot updated:", snapshot.size);
+        boxGrid.innerHTML = ""; // Clear and re-render everything
 
         snapshot.forEach(doc => {
             const data = doc.data();
@@ -208,19 +212,24 @@ async function fetchProductBoxes() {
             const box = document.createElement("div");
             box.className = "box";
 
-            // Adjusted to match the structure of the data you're uploading (tag, product, weight, timestamp)
+            const formattedDate = data.last_updated?.toDate
+                ? data.last_updated.toDate().toLocaleString()
+                : "Unknown";
+
             box.innerHTML = `
-                <div class="box-top">${data.product || "Unnamed"}</div>
-                <div class="box-bottom">
-                    <span>Weight: ${data.weight ?? "?"} grams</span>
+                <div class="box-top font-bold text-lg mb-2">${data.product || "Unnamed Product"}</div>
+                <div class="box-bottom text-sm space-y-1">
+                    <div><strong>Weight:</strong> ${data.weight ?? "?"} g</div>
+                    <div><strong>Items:</strong> ${data.item_count ?? "?"}</div>
+                    <div><strong>Last Updated:</strong> ${formattedDate}</div>
                 </div>
             `;
 
             boxGrid.appendChild(box);
         });
-    } catch (e) {
-        console.error("❌ Firestore fetch failed for product boxes:", e);
-    }
+    }, error => {
+        console.error("❌ Snapshot listener error for products:", error);
+    });
 }
 
 async function incrementItemsMovedToday() {
